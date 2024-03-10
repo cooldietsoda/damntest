@@ -1,4 +1,9 @@
-#include <damntest/damntest.h>
+#include <damntest.h>
+
+void sampleTest() {
+  using namespace DamnTest;
+  assertTrue(false);
+}
 
 namespace DamnTest {
 const char* getTestSuiteName() {
@@ -10,7 +15,7 @@ DamnTest::LogOutputCallback getLogOutputCallback() {
 }
 
 void putTestCases() {
-  
+  addTestCase("sampleTest", sampleTest);
 }
 
 void preTestCase() {
