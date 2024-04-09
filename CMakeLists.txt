@@ -6,6 +6,8 @@ target_sources(${PROJECT_NAME}
         src/damntest.cpp
 )
 
+target_compile_options(${PROJECT_NAME} PRIVATE -fno-exceptions -fno-unwind-tables -fno-rtti)
+
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
