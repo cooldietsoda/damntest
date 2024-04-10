@@ -1,5 +1,6 @@
 #include <damntest.h>
 #include <cstdio>
+#include <cstdlib>
 
 void sampleTest1() {
   using namespace DamnTest;
@@ -16,8 +17,12 @@ void sampleTest3() {
   assertTrue(false);
 }
 
-void log(const char* msg) {
+void logToStd(const char* msg) {
   printf("%s", msg);
+}
+
+void exitToStd() {
+  exit(-1);
 }
 
 namespace DamnTest {
@@ -26,7 +31,11 @@ const char* getTestSuiteName() {
 }
 
 DamnTest::LogOutputCallback getLogOutputCallback() {
-  return &log;
+  return &logToStd;
+}
+
+DamnTest::ExitCallbackT getExitCallback() {
+  return &exitToStd;
 }
 
 void putTestCases() {
