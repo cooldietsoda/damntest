@@ -30,19 +30,19 @@ void putTestCases() {
   addTestCase("sampleTest2", sampleTest2);
 }
 
-void preTestCase() {
-
+bool preTestCase() {
+  return true;
 }
 
-void postTestCase() {
-
+bool postTestCase() {
+  return true;
 }
 
-void preTestSuite() {
-
+bool preTestSuite() {
+  return true;
 }
 
-void postTestSuite() {
-
+bool postTestSuite() {
+  return true;
 }
 }

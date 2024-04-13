@@ -71,23 +71,42 @@ int main() {
   log("Cases to be verified: "); log(utils::itoa(gTestCasesN), ELogType::eNoPrefix); log("\n", ELogType::eNoPrefix);
 
   log("Running pre test suite...\n");
-  preTestSuite();
+  if (!preTestSuite()) {
+    log("Failed to complete pre test suite!", ELogType::eError);
+    exit(-1);
+    return -1; // Just in case...
+  }
 
   for (uint8_t testCaseIdx=0; testCaseIdx<gTestCasesN; testCaseIdx++) {
     log("Test "); log(utils::itoa(testCaseIdx+1), ELogType::eNoPrefix); log("/", ELogType::eNoPrefix); 
     log(utils::itoa(gTestCasesN), ELogType::eNoPrefix); log(": '", ELogType::eNoPrefix);
     log(gTestCases[testCaseIdx].name, ELogType::eNoPrefix); log("'\n", ELogType::eNoPrefix);
+    
     log("Running pre test case...\n");
-    preTestCase();
+    if (!preTestCase()) {
+      log("Failed to complete pre test case!", ELogType::eError);
+      exit(-1);
+      return -1; // Just in case...
+    }
+
     log("Running test...\n");
     gTestCases[testCaseIdx].callback();
     log("Success!\n");
+
     log("Running post test case...\n");
-    postTestCase();
+    if (!postTestCase()) {
+      log("Failed to complete post test case!", ELogType::eError);
+      exit(-1);
+      return -1; // Just in case...
+    }
   }
 
   log("Running post test suite...\n");
-  postTestSuite();
+  if (!postTestSuite()) {
+    log("Failed to complete post test suite!", ELogType::eError);
+    exit(-1);
+    return -1; // Just in case...
+  }
 
 	log("All tests passed!");
   return 0;

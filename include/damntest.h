@@ -13,9 +13,9 @@ void exit(int status);
 void puts(const char* msg);
 void putTestCases();
 
-void preTestCase();
-void postTestCase();
+bool preTestCase();
+bool postTestCase();
 
-void preTestSuite();
-void postTestSuite();
+bool preTestSuite();
+bool postTestSuite();
 }
