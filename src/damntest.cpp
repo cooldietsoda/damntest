@@ -17,18 +17,30 @@ TestCase gTestCases[cTestCasesMax];
 LogOutputCallback gLogOutputCallback = nullptr;
 ExitCallbackT gExitCallback = nullptr;
 
-void log(const char* message) {
+enum class ELogType {
+  eInfo, eWarning, eError, eNoPrefix
+};
+
+void log(const char* message, ELogType type = ELogType::eInfo) {
   if (!gLogOutputCallback) {
     return;
+  }
+
+  switch (type) {
+    case ELogType::eInfo: gLogOutputCallback("[INFO]: "); break;
+    case ELogType::eWarning: gLogOutputCallback("[WARNING]: "); break;
+    case ELogType::eError: gLogOutputCallback("[ERROR]: "); break;
+    case ELogType::eNoPrefix:
+    default: break;
   }
 
   gLogOutputCallback(message);
 }
 
 void fail() {
-  log("[ERROR] Test failed!");
+  log("Test failed!\n", ELogType::eError);
   if (!gExitCallback) {
-    log("[ERROR] Cannot find exit function callback!");
+    log("Cannot find exit function callback!", ELogType::eError);
     return;
   }
 
@@ -47,7 +59,7 @@ void assertFalse(const bool value) {
 
 void addTestCase(const char* caseName, TestCaseCallbackT caseCallback) {
   if (gTestCasesN >= cTestCasesMax) {
-    log("[WARNING] Cannot add more cases! Your case wouldn't be checked\n");
+    log("Cannot add more cases! Your case wouldn't be checked\n", ELogType::eWarning);
     return;
   }
 
@@ -62,31 +74,34 @@ int main() {
   gExitCallback = getExitCallback();
 
   if (!gExitCallback) {
-    log("[ERROR] Cannot find exit callback! Quitting...");
+    log("Cannot find exit callback! Quitting...", ELogType::eError);
     return -1;
   }
 
-  log("[INFO] Preparing to run suite: '"); log(getTestSuiteName()); log("'\n");
+  log("Preparing to run suite: '"); log(getTestSuiteName(), ELogType::eNoPrefix); log("'\n", ELogType::eNoPrefix);
   
   putTestCases();
-  log("[INFO] Cases to be verified: ");
-  log(utils::itoa(gTestCasesN));
-  log("\n");
+  log("Cases to be verified: "); log(utils::itoa(gTestCasesN), ELogType::eNoPrefix); log("\n", ELogType::eNoPrefix);
 
-  log("[INFO] Running pre test suite...\n");
+  log("Running pre test suite...\n");
   preTestSuite();
+
   for (uint8_t testCaseIdx=0; testCaseIdx<gTestCasesN; testCaseIdx++) {
-    log("[INFO] Running pre test case...\n");
+    log("Test "); log(utils::itoa(testCaseIdx+1), ELogType::eNoPrefix); log("/", ELogType::eNoPrefix); 
+    log(utils::itoa(gTestCasesN), ELogType::eNoPrefix); log(": '", ELogType::eNoPrefix);
+    log(gTestCases[testCaseIdx].name, ELogType::eNoPrefix); log("'\n", ELogType::eNoPrefix);
+    log("Running pre test case...\n");
     preTestCase();
-    log("[INFO] Running '"); log(gTestCases[testCaseIdx].name); log("' test.\n");
+    log("Running test...\n");
     gTestCases[testCaseIdx].callback();
-    log("[INFO] Success!\n");
-    log("[INFO] Running post test case...\n");
+    log("Success!\n");
+    log("Running post test case...\n");
     postTestCase();
   }
-  log("[INFO] Running post test suite...\n");
+
+  log("Running post test suite...\n");
   postTestSuite();
 
-	log("[INFO] All tests passed!");
+	log("All tests passed!");
   return 0;
 }
