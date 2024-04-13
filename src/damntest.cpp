@@ -47,7 +47,9 @@ void fail(const char* filename = nullptr, int lineN = 0) {
 
 namespace DamnTest {
 void assert(bool value, const char* filename, int lineN) {
-  if (!value) fail(filename, lineN);
+  if (!value) {
+    fail(filename, lineN);
+  }
 }
 
 void addTestCase(const char* caseName, TestCaseCallbackT caseCallback) {
