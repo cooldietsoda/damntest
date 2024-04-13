@@ -1,6 +1,6 @@
 #include <damntest.h>
-
-using uint8_t = unsigned char;
+#include "utils.h"
+#include "common.h"
 
 namespace {
 using namespace DamnTest;
@@ -34,18 +34,6 @@ void fail() {
 
   gExitCallback();
 }
-
-void strcpyn(char* dest, uint8_t destSize, const char* src) {
-  for (uint8_t i=0; i<destSize-1; i++) {
-    if (src[i]=='\0')  {
-      break;
-    }
-
-    dest[i]=src[i];
-  }
-
-  dest[destSize-1] = '\0';
-}
 }
 
 namespace DamnTest {
@@ -64,7 +52,7 @@ void addTestCase(const char* caseName, TestCaseCallbackT caseCallback) {
   }
 
   gTestCases[gTestCasesN].callback = caseCallback;
-  strcpyn(gTestCases[gTestCasesN].name, sizeof(gTestCases[gTestCasesN].name), caseName);
+  utils::strcpyn(gTestCases[gTestCasesN].name, sizeof(gTestCases[gTestCasesN].name), caseName);
   gTestCasesN++;
 }
 }
@@ -81,8 +69,9 @@ int main() {
   log("[INFO] Preparing to run suite: '"); log(getTestSuiteName()); log("'\n");
   
   putTestCases();
-  log("[INFO] Cases to be verified: \n");
-  //log(itoa(gTestCases.size()));
+  log("[INFO] Cases to be verified: ");
+  log(utils::itoa(gTestCasesN));
+  log("\n");
 
   log("[INFO] Running pre test suite...\n");
   preTestSuite();
