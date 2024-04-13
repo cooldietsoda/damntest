@@ -7,6 +7,8 @@ target_sources(${PROJECT_NAME}
         src/utils.cpp
 )
 
+add_definitions(-DTESTS_N=32)
+
 target_compile_options(${PROJECT_NAME} PRIVATE -fno-exceptions -fno-unwind-tables -fno-rtti)
 
 target_include_directories(${PROJECT_NAME}

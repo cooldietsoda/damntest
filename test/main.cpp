@@ -17,25 +17,18 @@ void sampleTest3() {
   assertTrue(false);
 }
 
-void logToStd(const char* msg) {
-  printf("%s", msg);
-}
-
-void exitToStd() {
-  exit(-1);
-}
 
 namespace DamnTest {
 const char* getTestSuiteName() {
   return "VERIFICATION";
 }
 
-DamnTest::LogOutputCallback getLogOutputCallback() {
-  return &logToStd;
+void puts(const char* msg) {
+  printf("%s", msg);
 }
 
-DamnTest::ExitCallbackT getExitCallback() {
-  return &exitToStd;
+void exit(int status) {
+  ::exit(status);
 }
 
 void putTestCases() {

@@ -10,41 +10,29 @@ struct TestCase {
   char name[16];
 };
 
-constexpr uint8_t cTestCasesMax = 64;
+constexpr uint8_t cTestCasesMax = TESTS_N;
 uint8_t gTestCasesN = 0;
 TestCase gTestCases[cTestCasesMax];
-
-LogOutputCallback gLogOutputCallback = nullptr;
-ExitCallbackT gExitCallback = nullptr;
 
 enum class ELogType {
   eInfo, eWarning, eError, eNoPrefix
 };
 
 void log(const char* message, ELogType type = ELogType::eInfo) {
-  if (!gLogOutputCallback) {
-    return;
-  }
-
   switch (type) {
-    case ELogType::eInfo: gLogOutputCallback("[INFO]: "); break;
-    case ELogType::eWarning: gLogOutputCallback("[WARNING]: "); break;
-    case ELogType::eError: gLogOutputCallback("[ERROR]: "); break;
+    case ELogType::eInfo: DamnTest::puts("[INFO]: "); break;
+    case ELogType::eWarning: DamnTest::puts("[WARNING]: "); break;
+    case ELogType::eError: DamnTest::puts("[ERROR]: "); break;
     case ELogType::eNoPrefix:
     default: break;
   }
 
-  gLogOutputCallback(message);
+  DamnTest::puts(message);
 }
 
 void fail() {
   log("Test failed!\n", ELogType::eError);
-  if (!gExitCallback) {
-    log("Cannot find exit function callback!", ELogType::eError);
-    return;
-  }
-
-  gExitCallback();
+  DamnTest::exit(-1);
 }
 }
 
@@ -70,14 +58,6 @@ void addTestCase(const char* caseName, TestCaseCallbackT caseCallback) {
 }
 
 int main() {
-  gLogOutputCallback = getLogOutputCallback();
-  gExitCallback = getExitCallback();
-
-  if (!gExitCallback) {
-    log("Cannot find exit callback! Quitting...", ELogType::eError);
-    return -1;
-  }
-
   log("Preparing to run suite: '"); log(getTestSuiteName(), ELogType::eNoPrefix); log("'\n", ELogType::eNoPrefix);
   
   putTestCases();
