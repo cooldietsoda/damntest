@@ -4,19 +4,13 @@
 
 void sampleTest1() {
   using namespace DamnTest;
-  assertTrue(true);
+  DAMN_ASSERT(true);
 }
 
 void sampleTest2() {
   using namespace DamnTest;
-  assertFalse(false);
+  DAMN_ASSERT(false);
 }
-
-void sampleTest3() {
-  using namespace DamnTest;
-  assertTrue(false);
-}
-
 
 namespace DamnTest {
 const char* getTestSuiteName() {
@@ -34,7 +28,6 @@ void exit(int status) {
 void putTestCases() {
   addTestCase("sampleTest1", sampleTest1);
   addTestCase("sampleTest2", sampleTest2);
-  addTestCase("sampleTest3", sampleTest3);
 }
 
 void preTestCase() {

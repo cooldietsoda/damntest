@@ -30,19 +30,24 @@ void log(const char* message, ELogType type = ELogType::eInfo) {
   DamnTest::puts(message);
 }
 
-void fail() {
+void fail(const char* filename = nullptr, int lineN = 0) {
   log("Test failed!\n", ELogType::eError);
+
+  if (filename) {
+    log("File: "); log(filename, ELogType::eNoPrefix); log("\n", ELogType::eNoPrefix); 
+  }
+
+  if (lineN) {
+    log("Line: "); log(utils::itoa(lineN), ELogType::eNoPrefix); log("\n", ELogType::eNoPrefix);
+  }
+
   DamnTest::exit(-1);
 }
 }
 
 namespace DamnTest {
-void assertTrue(const bool value) {
-  if (!value) fail();
-}
-
-void assertFalse(const bool value) {
-  if (value) fail();
+void assert(bool value, const char* filename, int lineN) {
+  if (!value) fail(filename, lineN);
 }
 
 void addTestCase(const char* caseName, TestCaseCallbackT caseCallback) {
