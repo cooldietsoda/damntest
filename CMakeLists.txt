@@ -1,4 +1,5 @@
-project("DamnTest")
+cmake_minimum_required(VERSION 3.22)
+project("DamnTest" VERSION 0.1)
 
 add_library(${PROJECT_NAME} STATIC)
 target_sources(${PROJECT_NAME}
@@ -9,7 +10,7 @@ target_sources(${PROJECT_NAME}
 
 add_definitions(-DTESTS_N=32)
 
-target_compile_options(${PROJECT_NAME} PRIVATE -fno-exceptions -fno-unwind-tables -fno-rtti)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -fno-exceptions -fno-unwind-tables -fno-rtti)
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE
@@ -48,6 +49,35 @@ install(TARGETS ${PROJECT_NAME}
     EXPORT "${PROJECT_NAME}Targets"
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# generate and install export file
+install(EXPORT "${PROJECT_NAME}Targets"
+    FILE "${PROJECT_NAME}Targets.cmake"
+    NAMESPACE ${namespace}::
+    DESTINATION cmake
+)
+
+include(CMakePackageConfigHelpers)
+
+# generate the version file for the config file
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    VERSION "${version}"
+    COMPATIBILITY AnyNewerVersion
+)
+
+# create config file
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    INSTALL_DESTINATION cmake
+)
+
+# install config files
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    DESTINATION cmake
 )
 
 add_subdirectory(test)
