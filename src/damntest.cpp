@@ -7,10 +7,10 @@ using namespace DamnTest;
 
 struct TestCase {
   TestCaseCallbackT callback;
-  char name[16];
+  const char *name;
 };
 
-constexpr uint8_t cTestCasesMax = TESTS_N;
+constexpr uint8_t cTestCasesMax = TEST_CASES_MAX_N;
 uint8_t gTestCasesN = 0;
 TestCase gTestCases[cTestCasesMax];
 
@@ -59,7 +59,7 @@ void addTestCase(const char* caseName, TestCaseCallbackT caseCallback) {
   }
 
   gTestCases[gTestCasesN].callback = caseCallback;
-  utils::strcpyn(gTestCases[gTestCasesN].name, sizeof(gTestCases[gTestCasesN].name), caseName);
+  gTestCases[gTestCasesN].name = caseName;
   gTestCasesN++;
 }
 }
@@ -72,7 +72,7 @@ int main() {
 
   log("Running pre test suite...\n");
   if (!preTestSuite()) {
-    log("Failed to complete pre test suite!", ELogType::eError);
+    log("Failed to complete pre test suite!\n", ELogType::eError);
     exit(-1);
     return -1; // Just in case...
   }
@@ -84,7 +84,7 @@ int main() {
     
     log("Running pre test case...\n");
     if (!preTestCase()) {
-      log("Failed to complete pre test case!", ELogType::eError);
+      log("Failed to complete pre test case!\n", ELogType::eError);
       exit(-1);
       return -1; // Just in case...
     }
@@ -95,7 +95,7 @@ int main() {
 
     log("Running post test case...\n");
     if (!postTestCase()) {
-      log("Failed to complete post test case!", ELogType::eError);
+      log("Failed to complete post test case!\n", ELogType::eError);
       exit(-1);
       return -1; // Just in case...
     }
@@ -103,11 +103,11 @@ int main() {
 
   log("Running post test suite...\n");
   if (!postTestSuite()) {
-    log("Failed to complete post test suite!", ELogType::eError);
+    log("Failed to complete post test suite!\n", ELogType::eError);
     exit(-1);
     return -1; // Just in case...
   }
 
-	log("All tests passed!");
+	log("All tests passed!\n");
   return 0;
 }

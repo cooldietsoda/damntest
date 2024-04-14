@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project("DamnTest" VERSION 0.1)
 
+set(TEST_CASES_MAX_N "32" CACHE STRING "Number of test cases that would be allocated in global section")
+
 add_library(${PROJECT_NAME} STATIC)
 target_sources(${PROJECT_NAME}
     PRIVATE
@@ -8,7 +10,7 @@ target_sources(${PROJECT_NAME}
         src/utils.cpp
 )
 
-add_definitions(-DTESTS_N=32)
+add_definitions(-DTEST_CASES_MAX_N=${TEST_CASES_MAX_N})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -fno-exceptions -fno-unwind-tables -fno-rtti)
 
